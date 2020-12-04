@@ -1,0 +1,15 @@
+{
+    "configurations": {
+        "test":{
+            "adapter": "debugpy",
+            "configuration": {
+                "name": "this is a python test",
+                "type": "python",
+                "request": "launch",
+                "python.pythonPath": "/usr/bin/python",
+                "program": "${workspaceRoot}/sol04.py",
+                "cwd": "${workspaceRoot}"
+            }
+        }
+    }
+}
