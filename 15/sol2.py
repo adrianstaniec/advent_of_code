@@ -19,22 +19,26 @@ N = args.n
 
 
 def main(starting_numbers):
-    sequence = []
+    sequence = [0] * N
+    spoken_but_last = set()
     for i in range(N):
         next_number: int
         if i < len(starting_numbers):
             next_number = starting_numbers[i]
         else:
-            if sequence[-1] in sequence[:-1]:
+            # if sequence[i-1] in sequence[:i-1]:
+            if sequence[i - 1] in spoken_but_last:
                 cnt = 0
-                for number in reversed(sequence[:-1]):
+                for number in reversed(sequence[: i - 1]):
                     cnt += 1
-                    if number == sequence[-1]:
+                    if number == sequence[i - 1]:
                         break
                 next_number = cnt
             else:
                 next_number = 0
-        sequence.append(next_number)
+        if i > 0:
+            spoken_but_last.add(sequence[i - 1])
+        sequence[i] = next_number
         logger.debug(f"Turn {i+1}: {next_number}")
     return sequence[-1]
 

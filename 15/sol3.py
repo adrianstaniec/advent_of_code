@@ -1,6 +1,9 @@
+"""My solution to https://adventofcode.com/2020/day/15"""
+
 import argparse
 import logging
 import sys
+from collections import defaultdict
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--debug", action="store_true")
@@ -19,24 +22,23 @@ N = args.n
 
 
 def main(starting_numbers):
-    sequence = []
+    position = defaultdict(int)
+    first_time = True
     for i in range(N):
         next_number: int
         if i < len(starting_numbers):
             next_number = starting_numbers[i]
         else:
-            if sequence[-1] in sequence[:-1]:
-                cnt = 0
-                for number in reversed(sequence[:-1]):
-                    cnt += 1
-                    if number == sequence[-1]:
-                        break
-                next_number = cnt
-            else:
+            if first_time:
                 next_number = 0
-        sequence.append(next_number)
+        first_time = True if next_number not in position else False
+        nnext_number = i - position[next_number] + 1
+        position[next_number] = i + 1
         logger.debug(f"Turn {i+1}: {next_number}")
-    return sequence[-1]
+        answer = next_number
+        if not first_time:
+            next_number = nnext_number
+    return answer
 
 
 if __name__ == "__main__":
