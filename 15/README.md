@@ -1,6 +1,6 @@
 Three generations of solutions.
 
-Each next one is succesively faster.
+Each next one is successively faster.
 
 Only the last one can calculate Part 2 answer in reasonable time (18s).
 
