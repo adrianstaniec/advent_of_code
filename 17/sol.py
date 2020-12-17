@@ -1,5 +1,4 @@
-from rich import traceback
-traceback.install()
+"""My solution to https://adventofcode.com/2020/day/17"""
 
 import argparse
 import fileinput
@@ -20,6 +19,11 @@ if args.debug:
     logger.setLevel(logging.DEBUG)
 
 
+#               __
+#  _______  ___/ /__
+# / __/ _ \/ _  / -_)
+# \__/\___/\_,_/\__/
+#
 def parse():
     state = []
     for line in fileinput.input(files=(args.input)):
@@ -30,16 +34,12 @@ def parse():
     return np.expand_dims(pocket, 0)
 
 
-def count_active_neighbours2(pocket, x, y, z):
-    return np.sum(pocket[x - 1 : x + 2, y - 1 : y + 2, z - 1 : z + 2]) - pocket[x, y, z]
-
-
 def count_active_neighbours(pocket, z, x, y):
     cnt = 0
     for k in range(z - 1, z + 2):
         for i in range(x - 1, x + 2):
             for j in range(y - 1, y + 2):
-                if  k == z and i == x and j == y:
+                if k == z and i == x and j == y:
                     continue
                 if k < 0 or i < 0 or j < 0:
                     continue
@@ -81,7 +81,6 @@ def step(pocket):
                         new_state = 0
                 new_pocket[k, i, j] = new_state
 
-
     logger.debug(new_pocket)
     return new_pocket
 
@@ -90,7 +89,7 @@ def main():
     pocket = parse()
     for _ in range(6):
         pocket = step(pocket)
-    print('--- Part One ---')
+    print("--- Part One ---")
     print(np.sum(pocket))
 
 
