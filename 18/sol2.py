@@ -1,4 +1,4 @@
-"""My solution to http://adventofcode.com/2020/day/18"""
+"""My solution to http://adventofcode.com/2020/day/18#part2"""
 
 import fileinput
 import argparse
@@ -61,7 +61,6 @@ def parse(inp: str):
     # logger.debug(f"p: {inp}")
     node = Node()
     pc = 0  # parentheses counter
-    pb = 0  # parentheses beginning
     op_found = False
 
     if check_if_unnecessary_outer_parens(inp):
@@ -71,29 +70,38 @@ def parse(inp: str):
         node.value = int(inp)
         return node
 
+    top_level_ops = []
+
     for i in range(len(inp)):
         i = len(inp) - 1 - i
         c = inp[i]
-        if not op_found:
-            if c == ")":
-                pc += 1
-                if pc == 1:
-                    pb = i
-            elif c == "(":
-                pc -= 1
-                if pc == 0:
-                    node.right = parse(inp[i + 1 : pb])
-                continue
-            if pc > 0:
-                continue
-            if c == "+" or c == "*":
-                node.value = c
-                op_found = True
-            elif c.isnumeric():
-                node.right = Node(int(c))  # NOTE: works only for operands < 10
-        else:
-            node.left = parse(inp[: i + 1])
-            break
+
+        if c == ")":
+            pc += 1
+        elif c == "(":
+            pc -= 1
+            continue
+        if pc > 0:
+            continue
+
+        if c == "+" or c == "*":
+            top_level_ops.append((c,i))
+
+    for c, i in reversed(top_level_ops):
+        if c == '*':
+            node.value = c
+            node.left = parse(inp[:i])
+            node.right = parse(inp[i+1:])
+            return node
+
+    for c, i in reversed(top_level_ops):
+        if c == '+':
+            node.value = c
+            node.left = parse(inp[:i])
+            node.right = parse(inp[i+1:])
+            return node
+
+    assert False
     return node
 
 
@@ -120,5 +128,5 @@ def eval(inp):
 
 if __name__ == "__main__":
     results = [eval(line.strip()) for line in fileinput.input(files=(args.input))]
-    print('--- Part One ---')
+    print('--- Part Two ---')
     print(sum(results))
